@@ -1,14 +1,14 @@
 {
   "routes": {
-    "/": {},
-    "/account": {},
-    "/agriculture": {},
-    "/automobile": {},
-    "/communaute": {},
-    "/comparateur": {},
-    "/construction": {},
-    "/contact": {},
-    "/education": {},
-    "/partenaire": {}
+    "/missions": {},
+    "/missions/account": {},
+    "/missions/agriculture": {},
+    "/missions/automobile": {},
+    "/missions/communaute": {},
+    "/missions/comparateur": {},
+    "/missions/construction": {},
+    "/missions/contact": {},
+    "/missions/education": {},
+    "/missions/partenaire": {}
   }
 }

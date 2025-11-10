@@ -1,6 +1,6 @@
 
 export default {
-  basePath: '/',
+  basePath: '/missions',
   supportedLocales: {
   "en-US": ""
 },
