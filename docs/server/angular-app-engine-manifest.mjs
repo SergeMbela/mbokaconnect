@@ -1,6 +1,6 @@
 
 export default {
-  basePath: '/missions',
+  basePath: '/mbokaconnect',
   supportedLocales: {
   "en-US": ""
 },

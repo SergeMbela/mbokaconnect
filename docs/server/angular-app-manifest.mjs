@@ -2,69 +2,69 @@
 export default {
   bootstrap: () => import('./main.server.mjs').then(m => m.default),
   inlineCriticalCss: true,
-  baseHref: '/missions/',
+  baseHref: '/mbokaconnect/',
   locale: undefined,
   routes: [
   {
     "renderMode": 2,
-    "route": "/missions"
+    "route": "/mbokaconnect"
   },
   {
     "renderMode": 2,
-    "route": "/missions/contact"
+    "route": "/mbokaconnect/contact"
   },
   {
     "renderMode": 2,
-    "route": "/missions/construction"
+    "route": "/mbokaconnect/construction"
   },
   {
     "renderMode": 2,
-    "route": "/missions/agriculture"
+    "route": "/mbokaconnect/agriculture"
   },
   {
     "renderMode": 2,
-    "route": "/missions/automobile"
+    "route": "/mbokaconnect/automobile"
   },
   {
     "renderMode": 2,
-    "route": "/missions/education"
+    "route": "/mbokaconnect/education"
   },
   {
     "renderMode": 2,
-    "route": "/missions/partenaire"
+    "route": "/mbokaconnect/partenaire"
   },
   {
     "renderMode": 2,
-    "route": "/missions/communaute"
+    "route": "/mbokaconnect/communaute"
   },
   {
     "renderMode": 2,
-    "route": "/missions/comparateur"
+    "route": "/mbokaconnect/comparateur"
   },
   {
     "renderMode": 2,
-    "route": "/missions/account"
+    "route": "/mbokaconnect/account"
   },
   {
     "renderMode": 2,
-    "redirectTo": "/missions",
-    "route": "/missions/**"
+    "redirectTo": "/mbokaconnect",
+    "route": "/mbokaconnect/**"
   }
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 12055, hash: '7460ab863707d21cccea1008e5d01354600a769345983275cd1ed05069ab3a5c', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1014, hash: 'cc37f080954ab44fbe800b40dce5eed22eb1b887f8fa8b838b2bce39e747b095', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
-    'contact/index.html': {size: 29761, hash: '2716ae7f61a102b5edfc1e248a99a34578abfa99e1828b84dcbbde87a9c5e3f4', text: () => import('./assets-chunks/contact_index_html.mjs').then(m => m.default)},
-    'automobile/index.html': {size: 39111, hash: '0c89bec30fafcc47130fb5746d98a74f5eaaa5a57da64ec257727a48eeb04500', text: () => import('./assets-chunks/automobile_index_html.mjs').then(m => m.default)},
-    'index.html': {size: 35226, hash: '7944f44103e9486af7e412e5c1355171a819d2620cabe476d1d5c53cb7fd6c8d', text: () => import('./assets-chunks/index_html.mjs').then(m => m.default)},
-    'construction/index.html': {size: 37200, hash: 'c559f2f18c4b2e1bc5d16620af0c8dccdb80e45a561a1782ffb479a90a571036', text: () => import('./assets-chunks/construction_index_html.mjs').then(m => m.default)},
-    'partenaire/index.html': {size: 29770, hash: '59bfdfc0ca88276fe52e1ab1c2f390e2a0aea4e5fb626bd09dc743505e1b9859', text: () => import('./assets-chunks/partenaire_index_html.mjs').then(m => m.default)},
-    'education/index.html': {size: 39835, hash: '46afbadba86bf724d6ccf1f1c56c9ebfd140733846ba4c66c10aad28828f4fb9', text: () => import('./assets-chunks/education_index_html.mjs').then(m => m.default)},
-    'communaute/index.html': {size: 29773, hash: 'd74f02812444ea85ceae854211531a4747a240672963b3fcaa84f2fef4dd6eab', text: () => import('./assets-chunks/communaute_index_html.mjs').then(m => m.default)},
-    'comparateur/index.html': {size: 29773, hash: '44fb5f6908fc96051b8a905f1712e88f2ae6259055856d52ca299212adcf7a6b', text: () => import('./assets-chunks/comparateur_index_html.mjs').then(m => m.default)},
-    'account/index.html': {size: 46185, hash: '87fd4395ca62b08537b00b176dd7452b192a0d3c0bf8e7773b0003fc09808d65', text: () => import('./assets-chunks/account_index_html.mjs').then(m => m.default)},
-    'agriculture/index.html': {size: 37749, hash: 'ced170c7848e200c7b3c992808c6a45a9c0b26c37408a39a3cd4916d725f3d4b', text: () => import('./assets-chunks/agriculture_index_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 12059, hash: 'fc320e0b4618ed1db10e982b9d5bcfebd103de68d324b20a3f9a836534c225a7', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1018, hash: 'bc9d90f540827d8d1194c1779fc59f5a0773663507b058aecd6bbd532eced9c8', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'contact/index.html': {size: 29853, hash: '99b977616392546ad6c9382a106e9c57f07166c990e723168c49443cd64582f7', text: () => import('./assets-chunks/contact_index_html.mjs').then(m => m.default)},
+    'index.html': {size: 35318, hash: 'd787da0748d9110b484643bc9b8cba976c65b13b789e4d1a2776c9c71255afd4', text: () => import('./assets-chunks/index_html.mjs').then(m => m.default)},
+    'construction/index.html': {size: 37292, hash: '424f87ee2276a35109a151929032c3be81b8c42375daacb77ed0665070505f65', text: () => import('./assets-chunks/construction_index_html.mjs').then(m => m.default)},
+    'agriculture/index.html': {size: 37841, hash: 'd60991d9bea06faaaa7aae3fe3f5a38db934661e0af533f77ece8dc8b3e32227', text: () => import('./assets-chunks/agriculture_index_html.mjs').then(m => m.default)},
+    'partenaire/index.html': {size: 29862, hash: '36eb6670deef3ca11a64f1af15ad3bfbdb320f05a72fc4949f2b05584f0c646b', text: () => import('./assets-chunks/partenaire_index_html.mjs').then(m => m.default)},
+    'education/index.html': {size: 39923, hash: '02cd3052cf389f493370fbf69613f5249c7abfc6df52022e3976733b6d0eba5c', text: () => import('./assets-chunks/education_index_html.mjs').then(m => m.default)},
+    'automobile/index.html': {size: 39203, hash: '2859456ab83605ab7cc69853de60248244df5a1dfab9c78b1d5f3da620d1a49d', text: () => import('./assets-chunks/automobile_index_html.mjs').then(m => m.default)},
+    'communaute/index.html': {size: 29865, hash: '06c18b6cf2b14035af2efa5a0a86330fc3f5035b7f04e68c11e754619ea0564f', text: () => import('./assets-chunks/communaute_index_html.mjs').then(m => m.default)},
+    'comparateur/index.html': {size: 29865, hash: '6aee024d4837793db42cf1c8fc4c956ab208745923ffda6320df429cce00926c', text: () => import('./assets-chunks/comparateur_index_html.mjs').then(m => m.default)},
+    'account/index.html': {size: 46275, hash: '71b0c0031b60b1c7c1cf1bf695e6d5185ddf98aa553d18719f53651f02f63f25', text: () => import('./assets-chunks/account_index_html.mjs').then(m => m.default)},
     'styles-NHG4YJ5Z.css': {size: 28455, hash: 'l0M7Npd62KA', text: () => import('./assets-chunks/styles-NHG4YJ5Z_css.mjs').then(m => m.default)}
   },
 };
