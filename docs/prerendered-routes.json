@@ -1,14 +1,3 @@
 {
-  "routes": {
-    "/mbokaconnect": {},
-    "/mbokaconnect/account": {},
-    "/mbokaconnect/agriculture": {},
-    "/mbokaconnect/automobile": {},
-    "/mbokaconnect/communaute": {},
-    "/mbokaconnect/comparateur": {},
-    "/mbokaconnect/construction": {},
-    "/mbokaconnect/contact": {},
-    "/mbokaconnect/education": {},
-    "/mbokaconnect/partenaire": {}
-  }
+  "routes": {}
 }
