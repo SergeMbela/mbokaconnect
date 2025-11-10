@@ -7,7 +7,7 @@
     "build": "ng build --base-href /mbokaconnect/ && copy docs\\browser\\index.html docs\\404.html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:missions": "node dist/missions/server/server.mjs"
+    "serve:ssr:mbokaconnect": "node docs/server/server.mjs"
   },
   "private": true,
   "dependencies": {
