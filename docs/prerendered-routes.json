@@ -1,0 +1,14 @@
+{
+  "routes": {
+    "/": {},
+    "/account": {},
+    "/agriculture": {},
+    "/automobile": {},
+    "/communaute": {},
+    "/comparateur": {},
+    "/construction": {},
+    "/contact": {},
+    "/education": {},
+    "/partenaire": {}
+  }
+}
