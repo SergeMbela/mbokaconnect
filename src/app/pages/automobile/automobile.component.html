@@ -1,0 +1,265 @@
+<div class="bg-black min-h-screen text-white p-4 sm:p-6 md:p-8">
+  <div class="max-w-4xl mx-auto pt-24">
+
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Tableau de bord Automobile</h1>
+
+    <!-- Barre d'onglets -->
+    <div class="border-b border-gray-700 mb-8">
+      <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+        <button (click)="activeTab = 'pannes'"
+                [ngClass]="activeTab === 'pannes' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Pannes
+        </button>
+        <button (click)="activeTab = 'factures'"
+                [ngClass]="activeTab === 'factures' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Factures
+        </button>
+        <button (click)="activeTab = 'communication'"
+                [ngClass]="activeTab === 'communication' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Communication
+        </button>
+      </nav>
+    </div>
+
+    <!-- Contenu des onglets -->
+    <div>
+      <!-- Onglet Pannes -->
+      <div *ngIf="activeTab === 'pannes'">
+        <form (ngSubmit)="addBreakdown()" class="space-y-6 bg-gray-900 p-8 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Marque -->
+            <div class="relative">
+              <label for="marque" class="block text-sm font-medium text-gray-300 mb-1">Marque</label>
+              <input type="text" id="marque" name="marque" [(ngModel)]="newBreakdown.marque"
+                     (ngModelChange)="filterBrands()" (focus)="filterBrands()" (blur)="onBrandBlur()"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required autocomplete="off">
+              <div *ngIf="showBrandAutocomplete && filteredBrands.length > 0" class="absolute z-10 w-full bg-gray-800 border border-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto">
+                <div *ngFor="let brand of filteredBrands" (click)="selectBrand(brand)"
+                     class="px-4 py-2 text-white hover:bg-green-600 cursor-pointer">
+                  {{ brand }}
+                </div>
+              </div>
+            </div>
+            <!-- Modèle -->
+            <div>
+              <label for="modele" class="block text-sm font-medium text-gray-300 mb-1">Modèle</label>
+              <select id="modele" name="modele" [(ngModel)]="newBreakdown.modele"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required [disabled]="availableModels.length === 0">
+                <option value="" disabled>Sélectionner un modèle</option>
+                <option *ngFor="let model of availableModels" [value]="model">{{ model }}</option>
+              </select>
+            </div>
+            <!-- Année de fabrication -->
+            <div>
+              <label for="anneeFabrication" class="block text-sm font-medium text-gray-300 mb-1">Année de fabrication</label>
+              <input type="number" id="anneeFabrication" name="anneeFabrication" [(ngModel)]="newBreakdown.anneeFabrication" (blur)="validateYear()" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" min="1970" [max]="currentYear">
+            </div>
+            <!-- Description de la panne -->
+            <div class="lg:col-span-3">
+              <label for="description" class="block text-sm font-medium text-gray-300 mb-1">Description de la panne</label>
+              <textarea id="description" name="description" [(ngModel)]="newBreakdown.description" rows="3" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required></textarea>
+            </div>
+            <!-- Date début intervention -->
+            <div>
+              <label for="dateDebutIntervention" class="block text-sm font-medium text-gray-300 mb-1">Date début intervention</label>
+              <input type="date" id="dateDebutIntervention" name="dateDebutIntervention" [(ngModel)]="newBreakdown.dateDebutIntervention" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+            <!-- Date prévue réparation -->
+            <div>
+              <label for="datePrevueReparation" class="block text-sm font-medium text-gray-300 mb-1">Date prévue réparation</label>
+              <input type="date" id="datePrevueReparation" name="datePrevueReparation" [(ngModel)]="newBreakdown.datePrevueReparation" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+            <!-- Date réelle de réparation -->
+            <div>
+              <label for="dateReelleReparation" class="block text-sm font-medium text-gray-300 mb-1">Date réelle de réparation</label>
+              <input type="date" id="dateReelleReparation" name="dateReelleReparation" [(ngModel)]="newBreakdown.dateReelleReparation" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+            <!-- Pièces changées -->
+            <div class="lg:col-span-3">
+              <label for="piecesChangees" class="block text-sm font-medium text-gray-300 mb-1">Pièces changées</label>
+              <textarea id="piecesChangees" name="piecesChangees" [(ngModel)]="newBreakdown.piecesChangees" rows="3" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" placeholder="Lister les pièces..."></textarea>
+            </div>
+            <!-- Fichiers -->
+            <div>
+              <label for="facture" class="block text-sm font-medium text-gray-300 mb-1">Joindre la facture</label>
+              <input type="file" id="facture" name="facture" (change)="onFileSelected($event, 'facture')" multiple class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+            </div>
+            <div>
+              <label for="photos" class="block text-sm font-medium text-gray-300 mb-1">Ajouter des photos</label>
+              <input type="file" id="photos" name="photos" (change)="onFileSelected($event, 'photos')" multiple accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+            </div>
+            <!-- Statut de la facture -->
+            <div>
+              <label for="statutFacture" class="block text-sm font-medium text-gray-300 mb-1">Statut de la facture</label>
+              <select id="statutFacture" name="statutFacture" [(ngModel)]="newBreakdown.statutFacture" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                <option>à payer</option>
+                <option>payer</option>
+                <option>contester</option>
+              </select>
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white font-bold px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300">Enregistrer la panne</button>
+          </div>
+        </form>
+
+        <!-- Liste des pannes -->
+        <div class="mt-12" *ngIf="breakdowns.length > 0">
+          <h2 class="text-2xl font-bold text-white mb-4">Pannes Enregistrées</h2>
+          <div class="space-y-4">
+            <div *ngFor="let breakdown of breakdowns" class="bg-gray-900 p-4 rounded-lg">
+              <div class="flex flex-wrap justify-between items-start gap-4">
+                <div class="flex-grow">
+                  <div class="font-bold text-xl text-white">{{ breakdown.marque }} {{ breakdown.modele }} ({{ breakdown.anneeFabrication }})</div>
+                  <p class="text-gray-300 mt-2">{{ breakdown.description }}</p>
+                  <p class="text-sm text-gray-400 mt-2">Pièces changées : {{ breakdown.piecesChangees || 'N/A' }}</p>
+                </div>
+                <div class="text-right text-sm">
+                  <div class="font-semibold" [ngClass]="{'text-yellow-400': breakdown.statutFacture === 'à payer', 'text-green-400': breakdown.statutFacture === 'payer', 'text-red-400': breakdown.statutFacture === 'contester'}">{{ breakdown.statutFacture | uppercase }}</div>
+                  <div class="text-gray-400">Intervention : {{ breakdown.dateDebutIntervention | date:'dd/MM/yyyy' }}</div>
+                  <div *ngIf="breakdown.facture && breakdown.facture.length > 0" class="text-gray-300 mt-1">📎 {{ breakdown.facture.length }} facture(s)</div>
+                  <div *ngIf="breakdown.photos && breakdown.photos.length > 0" class="text-gray-300 mt-1">📷 {{ breakdown.photos.length }} photo(s)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Factures -->
+      <div *ngIf="activeTab === 'factures'">
+        <form (ngSubmit)="addAutoInvoice()" class="space-y-6 bg-gray-900 p-8 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Date de la facture -->
+            <div>
+              <label for="autoDateFacture" class="block text-sm font-medium text-gray-300 mb-1">Date de la facture</label>
+              <input type="date" id="autoDateFacture" name="autoDateFacture" [(ngModel)]="newAutoInvoice.dateFacture"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;" required>
+            </div>
+
+            <!-- Établissement -->
+            <div>
+              <label for="etablissement" class="block text-sm font-medium text-gray-300 mb-1">Établissement</label>
+              <input type="text" id="etablissement" name="etablissement" [(ngModel)]="newAutoInvoice.etablissement"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+            </div>
+
+            <!-- Adresse -->
+            <div>
+              <label for="adresse" class="block text-sm font-medium text-gray-300 mb-1">Adresse</label>
+              <input type="text" id="adresse" name="adresse" [(ngModel)]="newAutoInvoice.adresse"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <!-- Commune -->
+            <div>
+              <label for="commune" class="block text-sm font-medium text-gray-300 mb-1">Commune</label>
+              <select id="commune" name="commune" [(ngModel)]="newAutoInvoice.commune"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                      [disabled]="availableCommunes.length === 0">
+                <option value="" disabled>Sélectionner une commune</option>
+                <option *ngFor="let commune of availableCommunes" [value]="commune">{{ commune }}</option>
+              </select>
+            </div>
+
+            <!-- Ville -->
+            <div>
+              <label for="ville" class="block text-sm font-medium text-gray-300 mb-1">Ville</label>
+              <select id="ville" name="ville" [(ngModel)]="newAutoInvoice.ville" (change)="onCityChange()"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                <option value="" disabled>Sélectionner une ville</option>
+                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+              </select>
+            </div>
+
+            <!-- Mécanicien -->
+            <div>
+              <label for="mecanicien" class="block text-sm font-medium text-gray-300 mb-1">Mécanicien</label>
+              <input type="text" id="mecanicien" name="mecanicien" [(ngModel)]="newAutoInvoice.mecanicien"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <!-- GSM -->
+            <div>
+              <label for="gsm" class="block text-sm font-medium text-gray-300 mb-1">GSM</label>
+              <input type="text" id="gsm" name="gsm" [(ngModel)]="newAutoInvoice.gsm"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <!-- Montant et Devise -->
+            <div class="flex items-end space-x-2">
+              <div class="flex-grow">
+                <label for="autoMontant" class="block text-sm font-medium text-gray-300 mb-1">Montant</label>
+                <input type="number" id="autoMontant" name="autoMontant" [(ngModel)]="newAutoInvoice.montant"
+                       class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+              </div>
+              <div>
+                <label for="autoDevise" class="block text-sm font-medium text-gray-300 mb-1">Devise</label>
+                <select id="autoDevise" name="autoDevise" [(ngModel)]="newAutoInvoice.devise"
+                        class="bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                  <option>USD</option>
+                  <option>CDF</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Statut de la facture -->
+            <div>
+              <label for="autoStatut" class="block text-sm font-medium text-gray-300 mb-1">Statut de la facture</label>
+              <select id="autoStatut" name="autoStatut" [(ngModel)]="newAutoInvoice.statut"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                <option>à payer</option>
+                <option>payer</option>
+                <option>contester</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Fichier Facture -->
+          <div class="md:col-span-3">
+            <label for="autoFactureFile" class="block text-sm font-medium text-gray-300 mb-1">Joindre la facture</label>
+            <input type="file" id="autoFactureFile" name="autoFactureFile" (change)="onAutoInvoiceFileSelected($event)" multiple
+                   class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+          </div>
+
+          <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white font-bold px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300">
+              Enregistrer la facture
+            </button>
+          </div>
+        </form>
+
+        <!-- Liste des factures automobiles -->
+        <div class="mt-12" *ngIf="autoInvoices.length > 0">
+          <h2 class="text-2xl font-bold text-white mb-4">Factures Automobiles Enregistrées</h2>
+          <div class="space-y-4">
+            <div *ngFor="let invoice of autoInvoices" class="bg-gray-900 p-4 rounded-lg">
+              <div class="flex flex-wrap justify-between items-start gap-4">
+                <div class="flex-grow">
+                  <div class="font-bold text-xl text-white">{{ invoice.etablissement }}</div>
+                  <div class="text-sm text-gray-400">Mécanicien: {{ invoice.mecanicien || 'N/A' }} ({{ invoice.gsm || 'N/A' }})</div>
+                  <div class="text-sm text-gray-400">{{ invoice.adresse }}, {{ invoice.commune }}, {{ invoice.ville }}</div>
+                </div>
+                <div class="text-right text-sm">
+                  <div class="text-lg font-semibold text-green-500">{{ invoice.montant | number }} {{ invoice.devise }}</div>
+                  <div class="font-semibold" [ngClass]="{'text-yellow-400': invoice.statut === 'à payer', 'text-green-400': invoice.statut === 'payer', 'text-red-400': invoice.statut === 'contester'}">{{ invoice.statut | uppercase }}</div>
+                  <div class="text-gray-400">Date facture : {{ invoice.dateFacture | date:'dd/MM/yyyy' }}</div>
+                  <div *ngIf="invoice.factureFile && invoice.factureFile.length > 0" class="text-gray-300 mt-1">📎 {{ invoice.factureFile.length }} fichier(s)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Communication -->
+      <div *ngIf="activeTab === 'communication'" class="text-center text-gray-500 py-16">
+        Contenu pour la communication automobile à venir.
+      </div>
+    </div>
+
+  </div>
+</div>

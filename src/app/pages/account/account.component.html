@@ -1,0 +1,95 @@
+<div class="bg-black min-h-screen text-white p-4 sm:p-6 md:p-8">
+  <div class="max-w-4xl mx-auto pt-24">
+    <div class="bg-gray-900 p-8 rounded-lg shadow-lg">
+      <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Créer un compte</h1>
+
+      <form (ngSubmit)="onSubmit()" #accountForm="ngForm" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Genre -->
+          <div>
+            <label for="gender" class="block text-sm font-medium text-gray-300 mb-1">Genre</label>
+            <select id="gender" name="gender" [(ngModel)]="user.gender"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+              <option value="" disabled>Sélectionner...</option>
+              <option value="homme">Homme</option>
+              <option value="femme">Femme</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+
+          <!-- Nom de famille -->
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-300 mb-1">Nom de famille</label>
+            <input type="text" id="lastName" name="lastName" [(ngModel)]="user.lastName"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+          </div>
+
+          <!-- Post-nom -->
+          <div>
+            <label for="postName" class="block text-sm font-medium text-gray-300 mb-1">Post-nom</label>
+            <input type="text" id="postName" name="postName" [(ngModel)]="user.postName"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+          </div>
+
+          <!-- Prénom -->
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-300 mb-1">Prénom</label>
+            <input type="text" id="firstName" name="firstName" [(ngModel)]="user.firstName"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+          </div>
+
+          <!-- Email -->
+          <div class="md:col-span-2">
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Adresse e-mail</label>
+            <input type="email" id="email" name="email" [(ngModel)]="user.email"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+          </div>
+
+          <!-- Téléphone mobile -->
+          <div>
+            <label for="phoneMobile" class="block text-sm font-medium text-gray-300 mb-1">Téléphone mobile</label>
+            <input type="tel" id="phoneMobile" name="phoneMobile" [(ngModel)]="user.phoneMobile"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+          </div>
+
+          <!-- Téléphone fixe -->
+          <div>
+            <label for="phoneFixed" class="block text-sm font-medium text-gray-300 mb-1">Téléphone fixe</label>
+            <input type="tel" id="phoneFixed" name="phoneFixed" [(ngModel)]="user.phoneFixed"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+          </div>
+
+          <!-- Pays -->
+          <div>
+            <label for="country" class="block text-sm font-medium text-gray-300 mb-1">Pays</label>
+            <select id="country" name="country" [(ngModel)]="user.country"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+              <option *ngFor="let country of countries" [value]="country">
+                {{ country }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Ville -->
+          <div>
+            <label for="city" class="block text-sm font-medium text-gray-300 mb-1">Ville</label>
+            <input type="text" id="city" name="city" [(ngModel)]="user.city"
+                   class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+          </div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="space-y-4">
+          <div class="flex items-center"><input id="promotions" name="promotions" type="checkbox" [(ngModel)]="user.receivePromotions" class="h-4 w-4 rounded border-gray-600 text-green-600 focus:ring-green-500"><label for="promotions" class="ml-3 block text-sm text-gray-300">Je souhaite recevoir les promotions et les actualités de MbokaConnect.</label></div>
+          <div class="flex items-center"><input id="terms" name="terms" type="checkbox" [(ngModel)]="user.acceptTerms" class="h-4 w-4 rounded border-gray-600 text-green-600 focus:ring-green-500" required><label for="terms" class="ml-3 block text-sm text-gray-300">J'accepte les <a href="#" class="font-medium text-green-500 hover:text-green-400">conditions générales</a> d'utilisation.</label></div>
+        </div>
+
+        <div class="text-center pt-4">
+          <button type="submit" [disabled]="!accountForm.form.valid" class="bg-green-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-green-700 transition duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed">
+            Créer mon compte
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

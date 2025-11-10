@@ -1,0 +1,43 @@
+<nav class="bg-black shadow-lg fixed w-full z-50">
+  <div class="max-w-7xl mx-auto px-6 flex justify-between items-center h-16">
+    <div class="flex items-center space-x-3">
+      
+      <span class="font-bold text-lg text-white">MbokaConnect</span>
+    </div>
+
+    <!-- Hamburger Menu Button -->
+    <div class="md:hidden">
+      <button (click)="toggleMenu()" class="text-white focus:outline-none">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path *ngIf="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          <path *ngIf="isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Menu Links -->
+    <ul [ngClass]="isMenuOpen ? 'flex' : 'hidden'"
+        class="absolute top-16 left-0 w-full bg-black shadow-lg flex-col items-center space-y-4 py-4
+               md:relative md:top-auto md:left-auto md:w-auto md:bg-transparent md:shadow-none md:flex md:flex-row md:space-y-0 md:space-x-6 md:py-0 font-medium text-white">
+      <li><a routerLink="/home" class="hover:text-green-500 transition-colors">Accueil</a></li>
+      <li class="group relative">
+        <a class="hover:text-green-500 transition-colors cursor-pointer">Mes Projets</a>
+        <!-- Sous-menu -->
+        <ul class="absolute left-0 mt-2 w-56 bg-gray-900 shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:delay-150 transition-all duration-300">
+          <li><a routerLink="/construction" class="block px-4 py-2 text-white hover:bg-gray-800 hover:text-green-500 transition-colors rounded-t-lg">🏗️ Construction</a></li>
+          <li><a routerLink="/sante" class="block px-4 py-2 text-white hover:bg-gray-800 hover:text-green-500 transition-colors">🏥 Santé</a></li>
+          <li><a routerLink="/education" class="block px-4 py-2 text-white hover:bg-gray-800 hover:text-green-500 transition-colors">🎓 Éducation</a></li>
+          <li><a routerLink="/agriculture" class="block px-4 py-2 text-white hover:bg-gray-800 hover:text-green-500 transition-colors">🌾 Agriculture</a></li>
+          <li><a routerLink="/automobile" class="block px-4 py-2 text-white hover:bg-gray-800 hover:text-green-500 transition-colors">🚗 Automobile</a></li>
+        </ul>
+      </li>
+      <li><a routerLink="/promotions" class="hover:text-green-500 transition-colors">Promotions</a></li>
+      <li><a routerLink="/comparateur" class="hover:text-green-500 transition-colors">Comparateur</a></li>
+      <li><a routerLink="/partenaires" class="hover:text-green-500 transition-colors">Partenaires</a></li>
+      <li><a routerLink="/communaute" class="hover:text-green-500 transition-colors">Communauté</a></li>
+       <li class="md:hidden"><a routerLink="/account" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 w-full text-center block">Mon compte</a></li>
+    </ul>    <div class="hidden md:block">
+      <a routerLink="/account" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700">Mon compte</a>
+    </div>
+  </div>
+</nav>

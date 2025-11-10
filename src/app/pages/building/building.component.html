@@ -1,0 +1,209 @@
+<div class="bg-black min-h-screen text-white p-4 sm:p-6 md:p-8">
+  <div class="max-w-4xl mx-auto pt-24">
+
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Tableau de bord du Projet</h1>
+
+    <!-- Barre d'onglets -->
+    <div class="border-b border-gray-700 mb-8">
+      <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+        <button (click)="activeTab = 'suivi'"
+                [ngClass]="activeTab === 'suivi' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Suivi chantier
+        </button>
+        <button (click)="activeTab = 'factures'"
+                [ngClass]="activeTab === 'factures' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Factures
+        </button>
+        <button (click)="activeTab = 'communication'"
+                [ngClass]="activeTab === 'communication' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Communication
+        </button>
+      </nav>
+    </div>
+
+    <!-- Contenu des onglets -->
+    <div>
+      <!-- Onglet Suivi chantier -->
+      <div *ngIf="activeTab === 'suivi'">
+        <p class="text-gray-400 text-center mb-8">Cochez les étapes au fur et à mesure de leur achèvement.</p>
+        <!-- Barre de progression -->
+        <div class="mb-12">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-green-500">Progression</span>
+            <span class="text-sm font-medium text-green-500">{{ progressPercentage | number:'1.0-0' }}%</span>
+          </div>
+          <div class="w-full bg-gray-700 rounded-full h-4">
+            <div class="bg-green-600 h-4 rounded-full transition-all duration-500" [style.width.%]="progressPercentage"></div>
+          </div>
+        </div>
+        <!-- Liste des étapes -->
+        <div class="space-y-4">
+          <div *ngFor="let stage of stages; let i = index" class="bg-gray-900 p-4 rounded-lg flex items-center justify-between shadow-md">
+            <div class="flex items-center">
+              <input type="checkbox" [id]="'stage-' + i" [(ngModel)]="stage.completed" (ngModelChange)="updateCompletion(stage)" class="w-5 h-5 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2 cursor-pointer">
+              <label [for]="'stage-' + i" class="ml-3 text-lg font-medium text-gray-300 cursor-pointer">{{ stage.name }}</label>
+            </div>
+            <div *ngIf="stage.completed && stage.completionDate" class="text-sm text-gray-400">
+              Validé le : {{ stage.completionDate | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Factures -->
+      <div *ngIf="activeTab === 'factures'">
+        <form (ngSubmit)="addInvoice()" class="space-y-6 bg-gray-900 p-8 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dénomination (Autocomplete) -->
+            <div class="relative">
+              <label for="denomination" class="block text-sm font-medium text-gray-300 mb-1">Dénomination</label>
+              <input type="text" id="denomination" name="denomination" [(ngModel)]="newInvoice.denomination" (ngModelChange)="filterMaterials()" (focus)="filterMaterials()"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" autocomplete="off">
+              <div *ngIf="showAutocomplete && filteredMaterials.length > 0" class="absolute z-10 w-full bg-gray-800 border border-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto">
+                <div *ngFor="let material of filteredMaterials" (click)="selectMaterial(material)"
+                     class="px-4 py-2 text-white hover:bg-green-600 cursor-pointer">
+                  {{ material }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Montant et Devise -->
+            <div class="flex items-end space-x-2">
+              <div class="flex-grow">
+                <label for="montant" class="block text-sm font-medium text-gray-300 mb-1">Montant</label>
+                <input type="number" id="montant" name="montant" [(ngModel)]="newInvoice.montant"
+                       class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+              </div>
+              <div>
+                <label for="devise" class="block text-sm font-medium text-gray-300 mb-1">Devise</label>
+                <select id="devise" name="devise" [(ngModel)]="newInvoice.devise"
+                        class="bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                  <option>USD</option>
+                  <option>CDF</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Quantité -->
+            <div>
+              <label for="quantite" class="block text-sm font-medium text-gray-300 mb-1">Quantité</label>
+              <input type="number" id="quantite" name="quantite" [(ngModel)]="newInvoice.quantite"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <!-- Marque -->
+            <div>
+              <label for="marque" class="block text-sm font-medium text-gray-300 mb-1">Marque</label>
+              <input type="text" id="marque" name="marque" [(ngModel)]="newInvoice.marque"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <!-- Numéro de facture -->
+            <div>
+              <label for="numeroFacture" class="block text-sm font-medium text-gray-300 mb-1">Numéro de facture</label>
+              <input type="text" id="numeroFacture" name="numeroFacture" [(ngModel)]="newInvoice.numeroFacture"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <!-- Statut -->
+            <div>
+              <label for="statut" class="block text-sm font-medium text-gray-300 mb-1">Statut</label>
+              <select id="statut" name="statut" [(ngModel)]="newInvoice.statut"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                <option>à payer</option>
+                <option>payer</option>
+                <option>contester</option>
+              </select>
+            </div>
+
+            <!-- Date de validation -->
+            <div>
+              <label for="dateValidation" class="block text-sm font-medium text-gray-300 mb-1">Date de validation</label>
+              <input type="date" id="dateValidation" name="dateValidation" [(ngModel)]="newInvoice.dateValidation"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+
+            <!-- Fichiers -->
+            <div class="md:col-span-2">
+              <label for="fichiers" class="block text-sm font-medium text-gray-300 mb-1">Joindre des fichiers (facture, photo...)</label>
+              <input type="file" id="fichiers" name="fichiers" (change)="onFileSelected($event)" multiple
+                     class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white font-bold px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300">
+              Ajouter la facture
+            </button>
+          </div>
+        </form>
+
+        <!-- Liste des factures ajoutées -->
+        <div class="mt-12" *ngIf="invoices.length > 0">
+          <h2 class="text-2xl font-bold text-white mb-4">Factures Enregistrées</h2>
+          <div class="space-y-4">
+            <div *ngFor="let invoice of invoices" class="bg-gray-900 p-4 rounded-lg flex flex-wrap justify-between items-center gap-4">
+              <div class="flex-grow">
+                <div class="font-medium text-white">{{ invoice.denomination }} (x{{ invoice.quantite }}) - <span class="text-gray-400">{{ invoice.marque }}</span></div>
+                <div class="text-sm text-gray-400">Validé le : {{ invoice.dateValidation | date:'dd/MM/yyyy' }}</div>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="text-lg font-semibold text-green-500 text-right">{{ invoice.montant | number }} {{ invoice.devise }}</div>
+                <div class="text-sm font-semibold" [ngClass]="{'text-yellow-400': invoice.statut === 'à payer', 'text-green-400': invoice.statut === 'payer', 'text-red-400': invoice.statut === 'contester'}">{{ invoice.statut | uppercase }}</div>
+                <button *ngIf="invoice.statut === 'à payer'" class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300">
+                  Demande de paiement
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Communication -->
+      <div *ngIf="activeTab === 'communication'">
+        <!-- Formulaire de communication -->
+        <form (ngSubmit)="addPost()" class="bg-gray-900 p-8 rounded-lg space-y-6">
+          <div>
+            <label for="comments" class="block text-sm font-medium text-gray-300 mb-1">Commentaire</label>
+            <textarea id="comments" name="comments" [(ngModel)]="newPost.comments" rows="4"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                      placeholder="Partagez une mise à jour..."></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="mediaDate" class="block text-sm font-medium text-gray-300 mb-1">Date de prise</label>
+              <input type="date" id="mediaDate" name="mediaDate" [(ngModel)]="newPost.mediaDate"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+            <div>
+              <label for="communicationFiles" class="block text-sm font-medium text-gray-300 mb-1">Joindre images/vidéos</label>
+              <input type="file" id="communicationFiles" name="communicationFiles" (change)="onCommunicationFileSelected($event)" multiple accept="image/*,video/*"
+                     class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+            </div>
+          </div>
+
+          <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white font-bold px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300">
+              Publier
+            </button>
+          </div>
+        </form>
+
+        <!-- Fil de communication -->
+        <div class="mt-12 space-y-6">
+          <div *ngFor="let post of posts" class="bg-gray-900 p-6 rounded-lg">
+            <p class="text-white whitespace-pre-wrap">{{ post.comments }}</p>
+            <div class="text-xs text-gray-400 mt-4 flex justify-between items-center">
+              <span>Publié le : {{ post.postDate | date:'dd/MM/yyyy à HH:mm' }}</span>
+              <span *ngIf="post.files && post.files.length > 0">📎 {{ post.files.length }} fichier(s) joint(s)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

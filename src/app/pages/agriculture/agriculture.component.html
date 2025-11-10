@@ -1,0 +1,203 @@
+<div class="bg-black min-h-screen text-white p-4 sm:p-6 md:p-8">
+  <div class="max-w-4xl mx-auto pt-24">
+
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Tableau de bord Agricole</h1>
+
+    <!-- Barre d'onglets -->
+    <div class="border-b border-gray-700 mb-8">
+      <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+        <button (click)="activeTab = 'recolte'"
+                [ngClass]="activeTab === 'recolte' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Récolte
+        </button>
+        <button (click)="activeTab = 'factures'"
+                [ngClass]="activeTab === 'factures' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Factures
+        </button>
+        <button (click)="activeTab = 'communication'"
+                [ngClass]="activeTab === 'communication' ? 'border-green-500 text-green-500' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Communication
+        </button>
+      </nav>
+    </div>
+
+    <!-- Contenu des onglets -->
+    <div>
+      <!-- Onglet Récolte -->
+      <div *ngIf="activeTab === 'recolte'">
+        <form (ngSubmit)="addHarvest()" class="space-y-6 bg-gray-900 p-8 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nom de la plante (Autocomplete) -->
+            <div class="relative">
+              <label for="plantName" class="block text-sm font-medium text-gray-300 mb-1">Nom de la plante</label>
+              <input type="text" id="plantName" name="plantName" [(ngModel)]="newHarvest.plantName" (ngModelChange)="filterPlants()" (focus)="filterPlants()"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" autocomplete="off" required>
+              <div *ngIf="showAutocomplete && filteredPlants.length > 0" class="absolute z-10 w-full bg-gray-800 border border-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto">
+                <div *ngFor="let plant of filteredPlants" (click)="selectPlant(plant)" class="px-4 py-2 text-white hover:bg-green-600 cursor-pointer">
+                  {{ plant }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Superficie -->
+            <div>
+              <label for="area" class="block text-sm font-medium text-gray-300 mb-1">Superficie (en m²)</label>
+              <input type="number" id="area" name="area" [(ngModel)]="newHarvest.area"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+            </div>
+
+            <!-- Date de semence -->
+            <div>
+              <label for="sowingDate" class="block text-sm font-medium text-gray-300 mb-1">Date de semence</label>
+              <input type="date" id="sowingDate" name="sowingDate" [(ngModel)]="newHarvest.sowingDate"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;" required>
+            </div>
+
+            <!-- Date de récolte prévue -->
+            <div>
+              <label for="expectedHarvestDate" class="block text-sm font-medium text-gray-300 mb-1">Date de récolte prévue</label>
+              <input type="date" id="expectedHarvestDate" name="expectedHarvestDate" [(ngModel)]="newHarvest.expectedHarvestDate"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+
+            <!-- Date de récolte réelle -->
+            <div>
+              <label for="actualHarvestDate" class="block text-sm font-medium text-gray-300 mb-1">Date de récolte réelle</label>
+              <input type="date" id="actualHarvestDate" name="actualHarvestDate" [(ngModel)]="newHarvest.actualHarvestDate"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;">
+            </div>
+
+            <!-- Quantité et Nombre de sacs -->
+            <div class="flex items-end space-x-2">
+              <div class="flex-grow">
+                <label for="quantityKg" class="block text-sm font-medium text-gray-300 mb-1">Quantité (kg)</label>
+                <input type="number" id="quantityKg" name="quantityKg" [(ngModel)]="newHarvest.quantityKg"
+                       class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+              </div>
+              <div>
+                <label for="bagCount" class="block text-sm font-medium text-gray-300 mb-1">Nb. de sacs</label>
+                <input type="number" id="bagCount" name="bagCount" [(ngModel)]="newHarvest.bagCount"
+                       class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+              </div>
+            </div>
+
+            <!-- Photos -->
+            <div>
+              <label for="photos" class="block text-sm font-medium text-gray-300 mb-1">Ajouter des photos</label>
+              <input type="file" id="photos" name="photos" (change)="onPhotoSelected($event)" multiple accept="image/*"
+                     class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white font-bold px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300">
+              Enregistrer la récolte
+            </button>
+          </div>
+        </form>
+
+        <!-- Liste des récoltes -->
+        <div class="mt-12" *ngIf="harvests.length > 0">
+          <h2 class="text-2xl font-bold text-white mb-4">Récoltes Enregistrées</h2>
+          <div class="space-y-4">
+            <div *ngFor="let harvest of harvests" class="bg-gray-900 p-4 rounded-lg">
+              <div class="flex flex-wrap justify-between items-center gap-4">
+                <div class="flex-grow">
+                  <div class="font-bold text-xl text-white">{{ harvest.plantName }}</div>
+                  <div class="text-sm text-gray-400">Superficie : {{ harvest.area }} m²</div>
+                  <div class="text-sm text-gray-400">Semé le : {{ harvest.sowingDate | date:'dd/MM/yyyy' }}</div>
+                  <div *ngIf="harvest.actualHarvestDate" class="text-sm text-gray-400">Récolté le : {{ harvest.actualHarvestDate | date:'dd/MM/yyyy' }}</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-lg font-semibold text-green-500">{{ harvest.quantityKg || 'N/A' }} kg / {{ harvest.bagCount || 'N/A' }} sacs</div>
+                  <div *ngIf="harvest.photos && harvest.photos.length > 0" class="text-sm text-gray-300 mt-1">📎 {{ harvest.photos.length }} photo(s)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Factures -->
+      <div *ngIf="activeTab === 'factures'">
+        <form (ngSubmit)="addAgriInvoice()" class="space-y-6 bg-gray-900 p-8 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dénomination -->
+            <div class="md:col-span-2">
+              <label for="agriDenomination" class="block text-sm font-medium text-gray-300 mb-1">Dénomination</label>
+              <input type="text" id="agriDenomination" name="agriDenomination" [(ngModel)]="newAgriInvoice.denomination"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" required>
+            </div>
+
+            <!-- Commentaires -->
+            <div class="md:col-span-2">
+              <label for="commentaires" class="block text-sm font-medium text-gray-300 mb-1">Commentaires</label>
+              <textarea id="commentaires" name="commentaires" [(ngModel)]="newAgriInvoice.commentaires" rows="3"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"></textarea>
+            </div>
+
+            <!-- Date de la facture -->
+            <div>
+              <label for="dateFacture" class="block text-sm font-medium text-gray-300 mb-1">Date de la facture</label>
+              <input type="date" id="dateFacture" name="dateFacture" [(ngModel)]="newAgriInvoice.dateFacture"
+                     class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500" style="color-scheme: dark;" required>
+            </div>
+
+            <!-- Statut -->
+            <div>
+              <label for="agriStatut" class="block text-sm font-medium text-gray-300 mb-1">Statut</label>
+              <select id="agriStatut" name="agriStatut" [(ngModel)]="newAgriInvoice.statut"
+                      class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-green-500 focus:border-green-500">
+                <option>à payer</option>
+                <option>payer</option>
+                <option>contester</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Fichier Facture -->
+          <div>
+            <label for="factureFile" class="block text-sm font-medium text-gray-300 mb-1">Joindre la facture</label>
+            <input type="file" id="factureFile" name="factureFile" (change)="onAgriInvoiceFileSelected($event)" multiple
+                   class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700 cursor-pointer">
+          </div>
+
+          <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white font-bold px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300">
+              Enregistrer la facture
+            </button>
+          </div>
+        </form>
+
+        <!-- Liste des factures agricoles -->
+        <div class="mt-12" *ngIf="agriInvoices.length > 0">
+          <h2 class="text-2xl font-bold text-white mb-4">Factures Agricoles Enregistrées</h2>
+          <div class="space-y-4">
+            <div *ngFor="let invoice of agriInvoices" class="bg-gray-900 p-4 rounded-lg">
+              <div class="flex flex-wrap justify-between items-center gap-4">
+                <div class="flex-grow">
+                  <div class="font-bold text-xl text-white">{{ invoice.denomination }}</div>
+                  <div class="text-sm text-gray-400 italic">{{ invoice.commentaires }}</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-semibold" [ngClass]="{'text-yellow-400': invoice.statut === 'à payer', 'text-green-400': invoice.statut === 'payer', 'text-red-400': invoice.statut === 'contester'}">{{ invoice.statut | uppercase }}</div>
+                  <div class="text-sm text-gray-400">Date : {{ invoice.dateFacture | date:'dd/MM/yyyy' }}</div>
+                  <div *ngIf="invoice.factureFile && invoice.factureFile.length > 0" class="text-sm text-gray-300 mt-1">📎 {{ invoice.factureFile.length }} fichier(s)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Communication -->
+      <div *ngIf="activeTab === 'communication'" class="text-center text-gray-500 py-16">
+        Contenu pour la communication agricole à venir.
+        <!-- Ici, vous pourrez réutiliser ou adapter le formulaire de communication du suivi de chantier. -->
+      </div>
+    </div>
+
+  </div>
+</div>
